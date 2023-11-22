@@ -7,6 +7,28 @@ import Footer from "~/components/starter/footer/footer";
 
 import styles from "./styles.css?inline";
 
+export const useShowEnvEntriesLoader = routeLoader$(async ({ platform }) => {
+  if(!platform.env) {
+    return {
+      error: 'platform.env is not defined!!!'
+    };
+  }
+
+  try {
+    const platformEnvStr = JSON.stringify(platform.env);
+    // return `platform.env: ${platformEnvStr}`;
+    const numOfEntries = (await platform.env['MY_KV'].list()).keys.length;
+    return {
+      platformEnvStr,
+      numOfEntries,
+    }
+  } catch {
+    return {
+      error: "platform.env can't be stringified"
+    };
+  }
+});
+
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   // Control caching for this request for best performance and to reduce hosting costs:
   // https://qwik.builder.io/docs/caching/
