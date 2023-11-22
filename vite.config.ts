@@ -4,13 +4,16 @@ import { qwikCity } from "@builder.io/qwik-city/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { Miniflare } from 'miniflare';
 
-const mf = new Miniflare({
-    kvNamespaces: ['MY_KV'],
-    modules: true,
-    script: '',
-});
+let env = {};
 
-const env = await mf.getBindings();
+if(process.env.NODE_ENV === 'development') {
+  const mf = new Miniflare({
+      kvNamespaces: ['MY_KV'],
+      modules: true,
+      script: '',
+  });
+  env = await mf.getBindings();
+}
 
 export default defineConfig(() => {
   return {
